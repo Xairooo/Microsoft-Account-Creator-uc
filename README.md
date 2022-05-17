@@ -13,4 +13,4 @@ Install required packages:
 
 ## Usage
 
-`py msac.py`
+`py main.py`
