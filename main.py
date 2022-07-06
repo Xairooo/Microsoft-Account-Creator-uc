@@ -1,12 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 import os, json, string, random
 
-os.system("cls||clear")
+os.system("cls || clear")
 print("Microsoft Account Creator - senoe")
 
 # Load config
@@ -21,11 +23,11 @@ except Exception as e:
 print("Launching webdriver...")
 
 if "firefox" in cfg_webdriver or "gecko" in cfg_webdriver:
-    driver = webdriver.Firefox(executable_path=r"./webdriver/geckodriver", service_log_path=os.devnull)
+    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
 elif "chrome" in cfg_webdriver:
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    driver = webdriver.Chrome(options=options, executable_path=r"./webdriver/chromedriver", service_log_path=os.devnull)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 wait = WebDriverWait(driver, 30)
 
@@ -53,13 +55,13 @@ def create():
 
     wait.until(EC.visibility_of_element_located((By.ID, "BirthDateCountryAccrualInputPane")))
     # Select country
-    Select(driver.find_element_by_id("Country")).select_by_value("US")
+    Select(driver.find_element(By.ID, "Country")).select_by_value("US")
     # Select birthday month
-    Select(driver.find_element_by_id("BirthMonth")).select_by_value("1")
+    Select(driver.find_element(By.ID, "BirthMonth")).select_by_value("1")
     # Select birthday day
-    Select(driver.find_element_by_id("BirthDay")).select_by_value("1")
+    Select(driver.find_element(By.ID, "BirthDay")).select_by_value("1")
     # Select birthday year
-    driver.find_element_by_id("BirthYear").send_keys("2000")
+    driver.find_element(By.ID, "BirthYear").send_keys("2000")
     # Click Next
     wait.until(EC.visibility_of_element_located((By.ID, "iSignupAction"))).click()
 
