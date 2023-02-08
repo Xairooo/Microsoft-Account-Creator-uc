@@ -1,11 +1,9 @@
-from selenium import webdriver
+import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
+from pyvirtualdisplay import Display
 import os, json, string, random
 
 os.system("cls || clear")
@@ -16,18 +14,23 @@ try:
     with open("config.json") as f:
         config = json.load(f)
     cfg_signup_link = str(config["signup_link"])
-    cfg_webdriver = str(config["webdriver"]).lower()
 except Exception as e:
     print(f"Failed to load config: {e}")
 
 print("Launching webdriver...")
 
-if "firefox" in cfg_webdriver or "gecko" in cfg_webdriver:
-    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()))
-elif "chrome" in cfg_webdriver:
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+display = None
+if os.name == "posix":
+    display = Display()
+    # display.start()
+else:
+    raise RuntimeError("Linux only script")
+
+options = uc.ChromeOptions()
+options.add_argument("--log-level=3")
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument("--no-sandbox")
+driver = uc.Chrome(options=options)
 
 wait = WebDriverWait(driver, 30)
 
@@ -85,7 +88,6 @@ while True:
         print("Please enter a valid amount.")
     except ValueError:
         print("Please enter a valid amount.")
-        pass
 
 for _ in range(amount):
     create()
