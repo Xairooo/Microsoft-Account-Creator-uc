@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pyvirtualdisplay import Display
 import os, json, string, random
 
 os.system("cls || clear")
@@ -21,10 +20,9 @@ print("Launching webdriver...")
 
 display = None
 if os.name == "posix":
+    from pyvirtualdisplay import Display
     display = Display()
     # display.start()
-else:
-    raise RuntimeError("Linux only script")
 
 options = uc.ChromeOptions()
 options.add_argument("--log-level=3")
